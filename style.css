@@ -7,7 +7,6 @@ main {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: 100vh;
 }
 
 div {
@@ -39,14 +38,13 @@ td {
     text-align: center;
     color: black;
     font-family: "open sans";
-    font-size: 55px;
+    font-size: 30px;
 }
 
-.black-turn-text {
+.moves, .black-turn-text {
     text-align: center;
     font-family: "open sans";
-    font-size: 55px;
-    color: lightgray;
+    font-size: 30px;
 }
 
 .black-piece {
