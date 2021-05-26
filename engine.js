@@ -14,7 +14,7 @@ let findPiece = function (pieceId) {
     return board.indexOf(parsed);
 };
 
-// DOM referenes
+// DOM references
 const cells = document.querySelectorAll("td");
 let redsPieces = document.querySelectorAll("p");
 let moves = document.querySelectorAll(".moves")[0];
@@ -33,15 +33,6 @@ let selectedPiece = {
     allowLeft: false,
     allowRight: false,
     allow: false
-    // ,
-    // seventhSpace: false,
-    // ninthSpace: false,
-    // fourteenthSpace: false,
-    // eighteenthSpace: false,
-    // minusSeventhSpace: false,
-    // minusNinthSpace: false,
-    // minusFourteenthSpace: false,
-    // minusEighteenthSpace: false
 };
 
 /*---------- Event Listeners ----------*/
@@ -153,14 +144,16 @@ function giveCellsClick() {
 // makes the move that was clicked
 function makeMove(number) {
     if (removedPieces > 0) moves.innerHTML += ", ";
-    moves.innerHTML += board[selectedPiece.indexOfBoardPiece];
+    moves.innerHTML += getCellCoo(selectedPiece.indexOfBoardPiece);
+    moves.innerHTML += "&gt;";
+    moves.innerHTML += getCellCoo(selectedPiece.indexOfBoardPiece + number);
 
     document.getElementById(selectedPiece.pieceId).remove();
     document.getElementById(board[selectedPiece.indexOfBoardPiece + number / 2]).remove();
     cells[selectedPiece.indexOfBoardPiece].innerHTML = "";
     cells[selectedPiece.indexOfBoardPiece + number / 2].innerHTML = "";
 
-    cells[selectedPiece.indexOfBoardPiece + number].innerHTML = `<p class="red-piece" id="${selectedPiece.pieceId}"></p>`;
+    cells[selectedPiece.indexOfBoardPiece + number].innerHTML = getPieceCode(selectedPiece.pieceId);
     redsPieces = document.querySelectorAll("p");
 
     let indexOfPiece = selectedPiece.indexOfBoardPiece;
@@ -170,6 +163,10 @@ function makeMove(number) {
     removedPieces++;
     removeCellonclick();
     givePiecesEventListeners();
+}
+
+function getCellCoo(index) {
+    return `${index%boardWidth+1}:${parseInt(index/boardWidth+1)}`;
 }
 
 // Changes the board states data on the back end
@@ -186,6 +183,10 @@ function removeCellonclick() {
     for (let i = 0; i < cells.length; i++) {
         cells[i].removeAttribute("onclick");
     }
+}
+
+function getPieceCode(id) {
+    return `<p class="red-piece" id="${id}"></p>`;
 }
 
 givePiecesEventListeners();
