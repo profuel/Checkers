@@ -100,7 +100,7 @@ function getAvailableSpaces() {
     const column = selectedPiece.indexOfBoardPiece % boardSize;
     const row = parseInt(selectedPiece.indexOfBoardPiece / boardSize);
 
-    if (row > 2 &&
+    if (row > 1 &&
         board[selectedPiece.indexOfBoardPiece - 2*boardSize ] === null &&
         board[selectedPiece.indexOfBoardPiece - 1*boardSize ] !== null &&
         cells[selectedPiece.indexOfBoardPiece - 2*boardSize].classList.contains("noPieceHere") !== true) {
@@ -114,7 +114,7 @@ function getAvailableSpaces() {
         selectedPiece.allowDown = true;
         selectedPiece.allow = true;
     }
-    if (column > 2 &&
+    if (column > 1 &&
         board[selectedPiece.indexOfBoardPiece - 2 ] === null &&
         board[selectedPiece.indexOfBoardPiece - 1 ] !== null &&
         cells[selectedPiece.indexOfBoardPiece - 2].classList.contains("noPieceHere") !== true) {
