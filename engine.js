@@ -198,5 +198,7 @@ function generateField(board) {
     redsPieces = document.querySelectorAll("p");
 }
 
-generateField(board);
-givePiecesEventListeners();
+window.onload = function() {
+    generateField(board);
+    givePiecesEventListeners();
+};
