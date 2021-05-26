@@ -189,4 +189,14 @@ function getPieceCode(id) {
     return `<p class="red-piece" id="${id}"></p>`;
 }
 
+function generateField(board) {
+    for (let i=0; i<board.length; i++) {
+        if (board[i]) {
+            cells[i].innerHTML = getPieceCode(board[i]);
+        }
+    }
+    redsPieces = document.querySelectorAll("p");
+}
+
+generateField(board);
 givePiecesEventListeners();
