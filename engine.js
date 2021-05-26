@@ -1,5 +1,13 @@
 /*---------- Cached Variables ----------*/
 
+let leftPieces = 0;
+for(let i; i< board.length; i++) {
+    if (board[i]) leftPieces++;
+}
+let removedPieces = 0;
+
+const boardHeight = board.length / boardWidth;
+
 // parses pieceId's and returns the index of that piece's place on the board
 let findPiece = function (pieceId) {
     let parsed = parseInt(pieceId);
@@ -83,20 +91,20 @@ function getSelectedPiece() {
 
 // gets the moves that the selected piece can make
 function getAvailableSpaces() {
-    const column = selectedPiece.indexOfBoardPiece % boardSize;
-    const row = parseInt(selectedPiece.indexOfBoardPiece / boardSize);
+    const column = selectedPiece.indexOfBoardPiece % boardWidth;
+    const row = parseInt(selectedPiece.indexOfBoardPiece / boardWidth);
 
     if (row > 1 &&
-        board[selectedPiece.indexOfBoardPiece - 2*boardSize ] === null &&
-        board[selectedPiece.indexOfBoardPiece - 1*boardSize ] !== null &&
-        cells[selectedPiece.indexOfBoardPiece - 2*boardSize].classList.contains("noPieceHere") !== true) {
+        board[selectedPiece.indexOfBoardPiece - 2*boardWidth ] === null &&
+        board[selectedPiece.indexOfBoardPiece - 1*boardWidth ] !== null &&
+        cells[selectedPiece.indexOfBoardPiece - 2*boardWidth].classList.contains("noPieceHere") !== true) {
         selectedPiece.allowUp = true;
         selectedPiece.allow = true;
     }
-    if (row < boardSize-1 &&
-        board[selectedPiece.indexOfBoardPiece + 2*boardSize ] === null &&
-        board[selectedPiece.indexOfBoardPiece + 1*boardSize ] !== null &&
-        cells[selectedPiece.indexOfBoardPiece + 2*boardSize].classList.contains("noPieceHere") !== true) {
+    if (row < boardHeight-1 &&
+        board[selectedPiece.indexOfBoardPiece + 2*boardWidth ] === null &&
+        board[selectedPiece.indexOfBoardPiece + 1*boardWidth ] !== null &&
+        cells[selectedPiece.indexOfBoardPiece + 2*boardWidth].classList.contains("noPieceHere") !== true) {
         selectedPiece.allowDown = true;
         selectedPiece.allow = true;
     }
@@ -107,7 +115,7 @@ function getAvailableSpaces() {
         selectedPiece.allowLeft = true;
         selectedPiece.allow = true;
     }
-    if (column < boardSize-1 &&
+    if (column < boardHeight-1 &&
         board[selectedPiece.indexOfBoardPiece + 2 ] === null &&
         board[selectedPiece.indexOfBoardPiece + 1 ] !== null &&
         cells[selectedPiece.indexOfBoardPiece + 2].classList.contains("noPieceHere") !== true) {
@@ -127,10 +135,10 @@ function givePieceBorder() {
 // gives the cells on the board a 'click' bassed on the possible moves
 function giveCellsClick() {
     if (selectedPiece.allowDown) {
-        cells[selectedPiece.indexOfBoardPiece + 2*boardSize].setAttribute("onclick", "makeMove("+2*boardSize+")");
+        cells[selectedPiece.indexOfBoardPiece + 2*boardWidth].setAttribute("onclick", "makeMove("+2*boardWidth+")");
     }
     if (selectedPiece.allowUp) {
-        cells[selectedPiece.indexOfBoardPiece - 2*boardSize].setAttribute("onclick", "makeMove("+"-"+2*boardSize+")");
+        cells[selectedPiece.indexOfBoardPiece - 2*boardWidth].setAttribute("onclick", "makeMove("+"-"+2*boardWidth+")");
     }
     if (selectedPiece.allowRight) {
         cells[selectedPiece.indexOfBoardPiece + 2].setAttribute("onclick", "makeMove("+2+")");
@@ -144,7 +152,7 @@ function giveCellsClick() {
 
 // makes the move that was clicked
 function makeMove(number) {
-    if (redScore < 32) moves.innerHTML += ", ";
+    if (removedPieces > 0) moves.innerHTML += ", ";
     moves.innerHTML += board[selectedPiece.indexOfBoardPiece];
 
     document.getElementById(selectedPiece.pieceId).remove();
@@ -157,7 +165,9 @@ function makeMove(number) {
 
     let indexOfPiece = selectedPiece.indexOfBoardPiece;
     changeData(indexOfPiece, indexOfPiece + number, indexOfPiece + number / 2);
-    redScore--;
+
+    leftPieces--;
+    removedPieces++;
     removeCellonclick();
     givePiecesEventListeners();
 }

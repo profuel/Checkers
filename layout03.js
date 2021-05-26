@@ -9,5 +9,4 @@ const board = [
     null, null, null, null, null, null, null,
     null, null, null, null, null, null, null
 ];
-const boardSize = 7;
-let redScore = 32;
+const boardWidth = 7;

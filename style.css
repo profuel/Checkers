@@ -1,5 +1,6 @@
 * {
     margin: auto;
+    font-family: "open sans";
 }
 
 main {
@@ -37,18 +38,16 @@ td {
 .red-turn-text {
     text-align: center;
     color: black;
-    font-family: "open sans";
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .moves, .black-turn-text {
     text-align: center;
-    font-family: "open sans";
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .moves {
-    min-height: 200px;
+    min-height: 150px;
 }
 
 .black-piece {
@@ -91,6 +90,11 @@ span {
     display: inline-block;
 }
 
+.layouts div {
+    float: left;
+    margin: 0 10px;
+}
+
 @media screen and (max-width: 560px) {
     .red-piece {
         height: 4.5vw;
@@ -108,11 +112,11 @@ span {
     }
 
     .red-turn-text {
-        font-size: 40px;
+        font-size: 20px;
     }
     
     .black-turn-text {
-        font-size: 40px;
+        font-size: 20px;
     }
 
     table {
