@@ -47,6 +47,10 @@ td {
     font-size: 30px;
 }
 
+.moves {
+    min-height: 200px;
+}
+
 .black-piece {
     width: 20px;
     height: 20px;
