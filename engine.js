@@ -1,12 +1,19 @@
 /*---------- Cached Variables ----------*/
 
+let board;
+let boardWidth;
 let leftPieces = 0;
-for(let i; i< board.length; i++) {
-    if (board[i]) leftPieces++;
+
+function selectBoard(boardName) {
+    boardTitle.innerHTML = boards[boardName]['boardName'];
+    board = boards[boardName]['board'].slice();
+    boardWidth = boards[boardName]['boardWidth'];
+    reloadBoard();
 }
+
 let removedPieces = 0;
 
-const boardHeight = board.length / boardWidth;
+let boardHeight = 0;
 
 // parses pieceId's and returns the index of that piece's place on the board
 let findPiece = function (pieceId) {
@@ -16,25 +23,17 @@ let findPiece = function (pieceId) {
 
 // DOM references
 const cells = document.querySelectorAll("td");
+const boardTitle = document.querySelectorAll("#board-title")[0];
 let redsPieces = document.querySelectorAll("p");
 let moves = document.querySelectorAll(".moves")[0];
 moves.innerHTML = "";
 
-// player properties
-let turn = true;
 let playerPieces;
 
 // selected piece properties
-let selectedPiece = {
-    pieceId: -1,
-    indexOfBoardPiece: -1,
-    allowUp: false,
-    allowDown: false,
-    allowLeft: false,
-    allowRight: false,
-    allow: false
-};
+let selectedPiece = {};
 
+let history = [];
 /*---------- Event Listeners ----------*/
 
 // initialize event listeners on pieces
@@ -46,6 +45,40 @@ function givePiecesEventListeners() {
 }
 
 /*---------- Logic ----------*/
+
+function resetState() {
+
+    leftPieces = 0;
+    for(let i; i< board.length; i++) {
+        if (board[i]) leftPieces++;
+    }
+    removedPieces = 0;
+
+    boardHeight = board.length / boardWidth;
+
+// parses pieceId's and returns the index of that piece's place on the board
+    findPiece = function (pieceId) {
+        let parsed = parseInt(pieceId);
+        return board.indexOf(parsed);
+    };
+
+// DOM references
+    redsPieces = document.querySelectorAll("p");
+    moves = document.querySelectorAll(".moves")[0];
+    moves.innerHTML = "";
+
+// selected piece properties
+    selectedPiece = {
+        pieceId: -1,
+        indexOfBoardPiece: -1,
+        allowUp: false,
+        allowDown: false,
+        allowLeft: false,
+        allowRight: false,
+        allow: false
+    };
+    history = [];
+}
 
 // holds the length of the players piece count
 function getPlayerPieces() {
@@ -193,12 +226,19 @@ function generateField(board) {
     for (let i=0; i<board.length; i++) {
         if (board[i]) {
             cells[i].innerHTML = getPieceCode(board[i]);
+        } else {
+            cells[i].innerHTML = '';
         }
     }
     redsPieces = document.querySelectorAll("p");
 }
 
 window.onload = function() {
+    selectBoard(selectedBoard);
+};
+
+function reloadBoard() {
+    resetState();
     generateField(board);
     givePiecesEventListeners();
-};
+}
