@@ -29,7 +29,7 @@ div {
     width: 100%;
 }
 
-.noPieceHere, .noPieceHereStatic {
+.noPieceHere {
     background-color: #F0D2B4;
 }
 

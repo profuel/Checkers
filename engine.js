@@ -310,6 +310,6 @@ function reloadSelectedBoard() {
 
 window.onload = function() {
     selectBoard(selectedBoard);
-    document.getElementById('reload').addEventListener('click', "reloadSelectedBoard");
+    document.getElementById('reload').addEventListener('click', reloadSelectedBoard);
     document.getElementById('undo').addEventListener("click", doUndo);
 };
