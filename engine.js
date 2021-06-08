@@ -229,7 +229,7 @@ function generateField(board) {
     for (let i=0; i<board.length; i++) {
         if (board[i]) {
             cells[i].innerHTML = getPieceCode(board[i]);
-        } else if (cells[i].className === 'noPieceHere') {
+        } else if (cells[i].className !== 'noPieceHere') {
             cells[i].innerHTML = '';
         }
     }
