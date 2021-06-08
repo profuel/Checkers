@@ -5,6 +5,7 @@ let boardWidth;
 let leftPieces = 0;
 
 function selectBoard(boardName) {
+    selectedBoard = boardName;
     boardTitle.innerHTML = boards[boardName]['boardName'];
     board = boards[boardName]['board'].slice();
     boardWidth = boards[boardName]['boardWidth'];
@@ -214,7 +215,9 @@ function changeData(indexOfBoardPiece, modifiedIndex, removePiece) {
 // removes possible moves from old selected piece (* this is needed because the user might re-select a piece *)
 function removeCellonclick() {
     for (let i = 0; i < cells.length; i++) {
-        cells[i].removeAttribute("onclick");
+        if (cells[i].className === '') {
+            cells[i].removeAttribute("onclick");
+        }
     }
 }
 
@@ -226,7 +229,7 @@ function generateField(board) {
     for (let i=0; i<board.length; i++) {
         if (board[i]) {
             cells[i].innerHTML = getPieceCode(board[i]);
-        } else {
+        } else if (cells[i].className === 'noPieceHere') {
             cells[i].innerHTML = '';
         }
     }
@@ -242,3 +245,5 @@ function reloadBoard() {
     generateField(board);
     givePiecesEventListeners();
 }
+
+document.getElementById('restart').setAttribute('onclick', "selectBoard(selectedBoard)");
