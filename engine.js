@@ -33,7 +33,7 @@ let playerPieces;
 // selected piece properties
 let selectedPiece = {};
 
-let history = [];
+let movesHistory = [];
 /*---------- Event Listeners ----------*/
 
 // initialize event listeners on pieces
@@ -77,7 +77,7 @@ function resetState() {
         allowRight: false,
         allow: false
     };
-    history = [];
+    movesHistory = [];
 }
 
 // holds the length of the players piece count
@@ -176,10 +176,27 @@ function giveCellsClick() {
 
 // makes the move that was clicked
 function makeMove(number) {
-    if (removedPieces > 0) moves.innerHTML += ", ";
-    moves.innerHTML += getCellCoo(selectedPiece.indexOfBoardPiece);
-    moves.innerHTML += "&gt;";
-    moves.innerHTML += getCellCoo(selectedPiece.indexOfBoardPiece + number);
+    addHistoryMove(
+        selectedPiece.indexOfBoardPiece,
+        selectedPiece.indexOfBoardPiece + number,
+        removedPieces === 0
+    );
+    movesHistory.push({
+        'remove':  [
+            selectedPiece.indexOfBoardPiece + number
+        ],
+        'restore': [
+            selectedPiece.indexOfBoardPiece,
+            selectedPiece.indexOfBoardPiece + number / 2
+        ],
+        'restoreId': [
+            board[selectedPiece.indexOfBoardPiece],
+            board[selectedPiece.indexOfBoardPiece + number / 2]
+        ],
+        'from' : selectedPiece.indexOfBoardPiece,
+        'to' : selectedPiece.indexOfBoardPiece + number
+    });
+    console.log(movesHistory);
 
     document.getElementById(selectedPiece.pieceId).remove();
     document.getElementById(board[selectedPiece.indexOfBoardPiece + number / 2]).remove();
@@ -196,6 +213,21 @@ function makeMove(number) {
     removedPieces++;
     removeCellonclick();
     givePiecesEventListeners();
+}
+
+function resetHistory() {
+    moves.innerHTML = "";
+}
+
+function addHistoryMove(from, to, first)
+{
+    if (!first) {
+        moves.innerHTML += ", ";
+    }
+
+    moves.innerHTML += getCellCoo(from);
+    moves.innerHTML += "&gt;";
+    moves.innerHTML += getCellCoo(to);
 }
 
 function getCellCoo(index) {
@@ -227,10 +259,13 @@ function generateField(board) {
         if (board[i]) {
             cells[i].innerHTML = getPieceCode(board[i]);
         } else {
-            cells[i].innerHTML = '';
+            if (cells[i].className!=='noPieceHere') {
+                cells[i].innerHTML = '';
+            }
         }
     }
     redsPieces = document.querySelectorAll("p");
+    movesHistory = [];
 }
 
 window.onload = function() {
@@ -242,3 +277,32 @@ function reloadBoard() {
     generateField(board);
     givePiecesEventListeners();
 }
+
+function doUndo() {
+    if (movesHistory.length === 0) return;
+
+    const move = movesHistory.pop();
+
+    drawHistory(movesHistory);
+
+    for (let i=0; i<move.remove.length; i++) {
+
+
+    }
+
+    generateField(board);
+    leftPieces++;
+    removedPieces--;
+    removeCellonclick();
+    givePiecesEventListeners();
+
+}
+
+function drawHistory(historyData) {
+    resetHistory();
+    for(let i=0; i<historyData.length; i++) {
+        addHistoryMove(historyData[i].from, historyData[i].to, i===0);
+    }
+}
+
+document.querySelectorAll("#undo")[0].addEventListener("click", doUndo);
