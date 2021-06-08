@@ -5,6 +5,7 @@ let boardWidth;
 let leftPieces = 0;
 
 function selectBoard(boardName) {
+    selectedBoard = boardName;
     boardTitle.innerHTML = boards[boardName]['boardName'];
     board = boards[boardName]['board'].slice();
     boardWidth = boards[boardName]['boardWidth'];
@@ -246,7 +247,9 @@ function changeData(indexOfBoardPiece, modifiedIndex, removePiece) {
 // removes possible moves from old selected piece (* this is needed because the user might re-select a piece *)
 function removeCellonclick() {
     for (let i = 0; i < cells.length; i++) {
-        cells[i].removeAttribute("onclick");
+        if (cells[i].className === '') {
+            cells[i].removeAttribute("onclick");
+        }
     }
 }
 
@@ -267,10 +270,6 @@ function generateField(board) {
     redsPieces = document.querySelectorAll("p");
     movesHistory = [];
 }
-
-window.onload = function() {
-    selectBoard(selectedBoard);
-};
 
 function reloadBoard() {
     resetState();
@@ -305,4 +304,9 @@ function drawHistory(historyData) {
     }
 }
 
-document.querySelectorAll("#undo")[0].addEventListener("click", doUndo);
+
+window.onload = function() {
+    selectBoard(selectedBoard);
+    document.getElementById('restart').setAttribute('onclick', "selectBoard(selectedBoard)");
+    document.querySelectorAll("#undo")[0].addEventListener("click", doUndo);
+};
