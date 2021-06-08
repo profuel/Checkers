@@ -304,9 +304,12 @@ function drawHistory(historyData) {
     }
 }
 
+function reloadSelectedBoard() {
+    selectBoard(selectedBoard);
+}
 
 window.onload = function() {
     selectBoard(selectedBoard);
-    document.getElementById('restart').setAttribute('onclick', "selectBoard(selectedBoard)");
-    document.querySelectorAll("#undo")[0].addEventListener("click", doUndo);
+    document.getElementById('reload').addEventListener('click', "reloadSelectedBoard");
+    document.getElementById('undo').addEventListener("click", doUndo);
 };
