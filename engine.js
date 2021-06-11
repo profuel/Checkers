@@ -34,7 +34,7 @@ let playerPieces;
 // selected piece properties
 let selectedPiece = {};
 
-let history = [];
+let movesHistory = [];
 /*---------- Event Listeners ----------*/
 
 // initialize event listeners on pieces
@@ -78,7 +78,7 @@ function resetState() {
         allowRight: false,
         allow: false
     };
-    history = [];
+    movesHistory = [];
 }
 
 // holds the length of the players piece count
@@ -177,10 +177,18 @@ function giveCellsClick() {
 
 // makes the move that was clicked
 function makeMove(number) {
-    if (removedPieces > 0) moves.innerHTML += ", ";
-    moves.innerHTML += getCellCoo(selectedPiece.indexOfBoardPiece);
-    moves.innerHTML += "&gt;";
-    moves.innerHTML += getCellCoo(selectedPiece.indexOfBoardPiece + number);
+    addHistoryMove(
+        selectedPiece.indexOfBoardPiece,
+        selectedPiece.indexOfBoardPiece + number,
+        removedPieces === 0
+    );
+    movesHistory.push({
+        'removeId': board[selectedPiece.indexOfBoardPiece + number / 2],
+        'removed': selectedPiece.indexOfBoardPiece + number / 2,
+        'from' : selectedPiece.indexOfBoardPiece,
+        'to' : selectedPiece.indexOfBoardPiece + number
+    });
+    console.log(movesHistory);
 
     document.getElementById(selectedPiece.pieceId).remove();
     document.getElementById(board[selectedPiece.indexOfBoardPiece + number / 2]).remove();
@@ -197,6 +205,23 @@ function makeMove(number) {
     removedPieces++;
     removeCellonclick();
     givePiecesEventListeners();
+    resetSelectedPieceProperties();
+    document.getElementById('undo').className = 'noPieceHere';
+}
+
+function resetHistory() {
+    moves.innerHTML = "";
+}
+
+function addHistoryMove(from, to, first)
+{
+    if (!first) {
+        moves.innerHTML += ", ";
+    }
+
+    moves.innerHTML += getCellCoo(from);
+    moves.innerHTML += "&gt;";
+    moves.innerHTML += getCellCoo(to);
 }
 
 function getCellCoo(index) {
@@ -208,8 +233,6 @@ function changeData(indexOfBoardPiece, modifiedIndex, removePiece) {
     board[indexOfBoardPiece] = null;
     board[removePiece] = null;
     board[modifiedIndex] = parseInt(selectedPiece.pieceId);
-
-    resetSelectedPieceProperties();
 }
 
 // removes possible moves from old selected piece (* this is needed because the user might re-select a piece *)
@@ -229,16 +252,13 @@ function generateField(board) {
     for (let i=0; i<board.length; i++) {
         if (board[i]) {
             cells[i].innerHTML = getPieceCode(board[i]);
-        } else if (cells[i].className !== 'noPieceHere') {
+        } else if (!cells[i].classList.contains('noPieceHere')) {
             cells[i].innerHTML = '';
         }
     }
     redsPieces = document.querySelectorAll("p");
+    movesHistory = [];
 }
-
-window.onload = function() {
-    selectBoard(selectedBoard);
-};
 
 function reloadBoard() {
     resetState();
@@ -246,4 +266,44 @@ function reloadBoard() {
     givePiecesEventListeners();
 }
 
-document.getElementById('restart').setAttribute('onclick', "selectBoard(selectedBoard)");
+function doUndo() {
+    if (movesHistory.length === 0) return;
+
+    const move = movesHistory.pop();
+
+    drawHistory(movesHistory);
+
+    cells[move.removed].innerHTML = getPieceCode(move.removeId);
+    board[move.removed] = move.removeId;
+    cells[move.to].innerHTML = '';
+    cells[move.from].innerHTML = getPieceCode(board[move.to]);
+    board[move.from] = board[move.to];
+    board[move.to] = null;
+
+    resetSelectedPieceProperties();
+    leftPieces++;
+    removedPieces--;
+    removeCellonclick();
+    givePiecesEventListeners();
+
+    if (removedPieces === 0) {
+        document.getElementById('undo').className = 'noPieceHere hide';
+    }
+}
+
+function drawHistory(historyData) {
+    resetHistory();
+    for(let i=0; i<historyData.length; i++) {
+        addHistoryMove(historyData[i].from, historyData[i].to, i===0);
+    }
+}
+
+function reloadSelectedBoard() {
+    selectBoard(selectedBoard);
+}
+
+window.onload = function() {
+    selectBoard(selectedBoard);
+    document.getElementById('reload').addEventListener('click', reloadSelectedBoard);
+    document.getElementById('undo').addEventListener("click", doUndo);
+};

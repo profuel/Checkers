@@ -4,6 +4,10 @@
     font-size: 16px;
 }
 
+#undo {
+    font-size: 0;
+}
+
 main {
     display: flex;
     flex-direction: column;
@@ -34,6 +38,13 @@ td {
     background-color: #BA7A3A;
     width: 65px;
     height: 65px;
+}
+#numbers {
+    position: absolute;
+    top: 22px;
+}
+#numbers td {
+    background: none;
 }
 
 .red-turn-text {
@@ -160,3 +171,5 @@ span {
         width: 1.5vw;
     }
 }
+
+.hide svg { display: none;}
