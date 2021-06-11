@@ -171,3 +171,5 @@ span {
         width: 1.5vw;
     }
 }
+
+.hide svg { display: none;}

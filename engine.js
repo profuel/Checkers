@@ -183,17 +183,8 @@ function makeMove(number) {
         removedPieces === 0
     );
     movesHistory.push({
-        'remove':  [
-            selectedPiece.indexOfBoardPiece + number
-        ],
-        'restore': [
-            selectedPiece.indexOfBoardPiece,
-            selectedPiece.indexOfBoardPiece + number / 2
-        ],
-        'restoreId': [
-            board[selectedPiece.indexOfBoardPiece],
-            board[selectedPiece.indexOfBoardPiece + number / 2]
-        ],
+        'removeId': board[selectedPiece.indexOfBoardPiece + number / 2],
+        'removed': selectedPiece.indexOfBoardPiece + number / 2,
         'from' : selectedPiece.indexOfBoardPiece,
         'to' : selectedPiece.indexOfBoardPiece + number
     });
@@ -214,6 +205,8 @@ function makeMove(number) {
     removedPieces++;
     removeCellonclick();
     givePiecesEventListeners();
+    resetSelectedPieceProperties();
+    document.getElementById('undo').className = 'noPieceHere';
 }
 
 function resetHistory() {
@@ -240,8 +233,6 @@ function changeData(indexOfBoardPiece, modifiedIndex, removePiece) {
     board[indexOfBoardPiece] = null;
     board[removePiece] = null;
     board[modifiedIndex] = parseInt(selectedPiece.pieceId);
-
-    resetSelectedPieceProperties();
 }
 
 // removes possible moves from old selected piece (* this is needed because the user might re-select a piece *)
@@ -261,7 +252,7 @@ function generateField(board) {
     for (let i=0; i<board.length; i++) {
         if (board[i]) {
             cells[i].innerHTML = getPieceCode(board[i]);
-        } else if (cells[i].className !== 'noPieceHere') {
+        } else if (!cells[i].classList.contains('noPieceHere')) {
             cells[i].innerHTML = '';
         }
     }
@@ -282,17 +273,22 @@ function doUndo() {
 
     drawHistory(movesHistory);
 
-    for (let i=0; i<move.remove.length; i++) {
+    cells[move.removed].innerHTML = getPieceCode(move.removeId);
+    board[move.removed] = move.removeId;
+    cells[move.to].innerHTML = '';
+    cells[move.from].innerHTML = getPieceCode(board[move.to]);
+    board[move.from] = board[move.to];
+    board[move.to] = null;
 
-
-    }
-
-    generateField(board);
+    resetSelectedPieceProperties();
     leftPieces++;
     removedPieces--;
     removeCellonclick();
     givePiecesEventListeners();
 
+    if (removedPieces === 0) {
+        document.getElementById('undo').className = 'noPieceHere hide';
+    }
 }
 
 function drawHistory(historyData) {
