@@ -193,7 +193,6 @@ function makeMove(number) {
         'from' : selectedPiece.indexOfBoardPiece,
         'to' : selectedPiece.indexOfBoardPiece + number
     });
-    console.log(movesHistory);
 
     document.getElementById(selectedPiece.pieceId).remove();
     document.getElementById(board[selectedPiece.indexOfBoardPiece + number / 2]).remove();
@@ -311,8 +310,7 @@ function reloadSelectedBoard() {
 }
 
 function settingsMultiJump() {
-    keepSelection = document.getElementById('multiJump').checked;
-    console.log(keepSelection);
+    keepSelection = document.querySelector('#multiJump:checked') !== null;
 }
 
 window.onload = function() {
