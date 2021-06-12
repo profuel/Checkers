@@ -26,7 +26,6 @@ let findPiece = function (pieceId) {
 // DOM references
 const cells = document.querySelectorAll("td");
 const boardTitle = document.querySelectorAll("#board-title")[0];
-let redsPieces = document.querySelectorAll("p");
 let moves = document.querySelectorAll(".moves")[0];
 moves.innerHTML = "";
 
@@ -40,9 +39,11 @@ let movesHistory = [];
 
 // initialize event listeners on pieces
 function givePiecesEventListeners() {
-    for (let i = 0; i < redsPieces.length; i++) {
-        redsPieces[i].removeAttribute("onclick");
-        redsPieces[i].addEventListener("click", getPlayerPieces);
+    let playerPieces = document.querySelectorAll("p");
+
+    for (let i = 0; i < playerPieces.length; i++) {
+        playerPieces[i].removeAttribute("onclick");
+        playerPieces[i].addEventListener("click", getPlayerPieces);
     }
 
     if (removedPieces === 0) {
@@ -69,7 +70,6 @@ function resetState() {
     };
 
 // DOM references
-    redsPieces = document.querySelectorAll("p");
     moves = document.querySelectorAll(".moves")[0];
     moves.innerHTML = "";
 
@@ -88,12 +88,13 @@ function resetState() {
 
 // holds the length of the players piece count
 function getPlayerPieces() {
-    playerPieces = redsPieces;
     resetBorders();
 }
 
 // resets borders to default
 function resetBorders() {
+    let playerPieces = document.querySelectorAll("p");
+
     for (let i = 0; i < playerPieces.length; i++) {
         playerPieces[i].style.border = "1px solid white";
     }
@@ -111,7 +112,7 @@ function resetSelectedPieceProperties() {
     selectedPiece.allowRight = false;
 }
 
-// gets ID and index of the board cell its on
+// gets ID and index of the board cell it's on
 function getSelectedPiece() {
     selectedPiece.pieceId = parseInt(event.target.id);
     selectedPiece.indexOfBoardPiece = findPiece(selectedPiece.pieceId);
@@ -267,7 +268,6 @@ function generateField(board) {
             cells[i].innerHTML = '';
         }
     }
-    redsPieces = document.querySelectorAll("p");
     movesHistory = [];
 }
 
