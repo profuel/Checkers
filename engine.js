@@ -3,6 +3,7 @@
 let board;
 let boardWidth;
 let leftPieces = 0;
+let keepSelection = true;
 
 function selectBoard(boardName) {
     selectedBoard = boardName;
@@ -42,6 +43,10 @@ function givePiecesEventListeners() {
     for (let i = 0; i < redsPieces.length; i++) {
         redsPieces[i].removeAttribute("onclick");
         redsPieces[i].addEventListener("click", getPlayerPieces);
+    }
+
+    if (removedPieces === 0) {
+        document.getElementById('undo').className = 'noPieceHere hide';
     }
 }
 
@@ -196,6 +201,7 @@ function makeMove(number) {
     cells[selectedPiece.indexOfBoardPiece + number / 2].innerHTML = "";
 
     cells[selectedPiece.indexOfBoardPiece + number].innerHTML = getPieceCode(selectedPiece.pieceId);
+    selectedPieceId = selectedPiece.pieceId;
     redsPieces = document.querySelectorAll("p");
 
     let indexOfPiece = selectedPiece.indexOfBoardPiece;
@@ -206,6 +212,12 @@ function makeMove(number) {
     removeCellonclick();
     givePiecesEventListeners();
     resetSelectedPieceProperties();
+
+    if (keepSelection) {
+        selectedPiece.pieceId = selectedPieceId;
+        document.getElementById(selectedPiece.pieceId).click();
+    }
+
     document.getElementById('undo').className = 'noPieceHere';
 }
 
@@ -285,10 +297,6 @@ function doUndo() {
     removedPieces--;
     removeCellonclick();
     givePiecesEventListeners();
-
-    if (removedPieces === 0) {
-        document.getElementById('undo').className = 'noPieceHere hide';
-    }
 }
 
 function drawHistory(historyData) {
@@ -302,8 +310,14 @@ function reloadSelectedBoard() {
     selectBoard(selectedBoard);
 }
 
+function settingsMultiJump() {
+    keepSelection = document.getElementById('multiJump').checked;
+    console.log(keepSelection);
+}
+
 window.onload = function() {
     selectBoard(selectedBoard);
     document.getElementById('reload').addEventListener('click', reloadSelectedBoard);
     document.getElementById('undo').addEventListener("click", doUndo);
+    document.getElementById('multiJump').addEventListener("click", settingsMultiJump);
 };
